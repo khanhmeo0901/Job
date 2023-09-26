@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
-public class Main {
+public class ReadFilePdf {
     public static void main(String[] args) {
         try {
             // Đường dẫn đến tệp PDF cần đọc
@@ -36,6 +34,7 @@ public class Main {
             String separator = "--------";
             Map<String , List<String>> data = new HashMap<>();
             List<String> resultList = new ArrayList<>();
+            List<String> listData = new ArrayList<>();
 //            List<PDFLine> resultList = new ArrayList<>();
             for (int i = 0; i < lines.length; i++) {
 //                if (lines[i].contains(keyword)) {
@@ -48,6 +47,7 @@ public class Main {
 //                        result.add(lines[i + 1]);
 //                    }
 //                }
+                listData.add(lines[i]);
                 if (lines[i].contains(keyword)) {
                     // Nếu tìm thấy từ khóa, thêm dòng trước và dòng sau vào danh sách
                     String lineBefore = (i > 0) ? lines[i - 1] : "";
@@ -70,19 +70,13 @@ public class Main {
 //                }
             }
             data.put(new File(pdfFilePath).getName(),resultList);
-            // In kết quả ra màn hình
-//            for (PDFLine pdfLine : resultList) {
-//                System.out.println(pdfLine.getLine());
+
+//            for (String line : resultList) {
+//                System.out.println(line);
 //            }
-//
-            for (String line : resultList) {
+            for (String line : listData) {
                 System.out.println(line);
             }
-//            for (Map.Entry<String, List<String>> entry : data.entrySet()) {
-//                String key = entry.getKey();
-//                List<String> value = entry.getValue();
-//                System.out.println(key + " : " + value);
-//            }
             document.close();
         } catch (IOException e) {
             e.printStackTrace();
