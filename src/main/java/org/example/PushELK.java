@@ -21,12 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 public class PushELK {
-//    private static final RestHighLevelClient client = new RestHighLevelClient(
-//            RestClient.builder(new HttpHost("localhost", 9200, "http")));
+    private static final RestHighLevelClient client = new RestHighLevelClient(
+            RestClient.builder(new HttpHost("localhost", 9200, "http")));
 
     public static void main(String[] args) {
-        String data = getData();
-        System.out.println(data);
+//        String data = getData();
+//        System.out.println(data);
 //
 //        pushDataToELK(data);
 //        try {
@@ -40,69 +40,69 @@ public class PushELK {
 //            IndexRequest request = new IndexRequest("test").source(new Gson().toJson(data),XContentType.JSON);
 //            bulkRequest.add(request);
 //            client.bulk(bulkRequest, RequestOptions.DEFAULT);
-////            data.put("field1", "value1");
-////            data.put("field2", "value2");
-////            String data1 = getData();
-////
-////            // Dữ liệu dạng Map<String, String>
-////            Map<String, String> data = new HashMap<>();
-////            data.put("field1", "value1");
-////            data.put("field2", "value2");
-////
-////            // Thêm các trường và giá trị dữ liệu vào Map
-////
-////            // Tạo một IndexRequest để đẩy dữ liệu lên Elasticsearch
-////            IndexRequest request = new IndexRequest("test") // Thay thế bằng tên chỉ mục của bạn
-////                    .source(data);
-////
-////            // Thực hiện đẩy dữ liệu lên Elasticsearch và nhận kết quả
-////            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
-////
-////            // In thông tin về kết quả
-////            System.out.println("Document ID: " + response.getId());
-////            System.out.println("Index: " + response.getIndex());
-////            System.out.println("Result: " + response.getResult());
-////            // In response body
-////            String responseBody = response.toString();
-////            System.out.println("Response Body: " + responseBody);
-//            // Đóng kết nối client
-//            client.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        String data = getData();
+//            data.put("field1", "value1");
+//            data.put("field2", "value2");
+//            String data1 = getData();
 //
-//        pushDataToELK(data);
-    }
-
-
-//    public static void pushDataToELK(String data) {
+//            // Dữ liệu dạng Map<String, String>
+//            Map<String, String> data = new HashMap<>();
+//            data.put("field1", "value1");
+//            data.put("field2", "value2");
 //
-//        try {
+//            // Thêm các trường và giá trị dữ liệu vào Map
 //
-//            // Tạo một IndexRequest để đẩy chuỗi lên Elasticsearch
-//            IndexRequest request = new IndexRequest("test")
-//                    .source(data, XContentType.JSON);
-//            // Thực hiện đẩy chuỗi lên Elasticsearch và nhận kết quả
+//            // Tạo một IndexRequest để đẩy dữ liệu lên Elasticsearch
+//            IndexRequest request = new IndexRequest("test") // Thay thế bằng tên chỉ mục của bạn
+//                    .source(data);
+//
+//            // Thực hiện đẩy dữ liệu lên Elasticsearch và nhận kết quả
 //            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
 //
 //            // In thông tin về kết quả
 //            System.out.println("Document ID: " + response.getId());
 //            System.out.println("Index: " + response.getIndex());
 //            System.out.println("Result: " + response.getResult());
-//
+//            // In response body
+//            String responseBody = response.toString();
+//            System.out.println("Response Body: " + responseBody);
+//            // Đóng kết nối client
+//            client.close();
 //        } catch (IOException e) {
 //            e.printStackTrace();
-//        } finally {
-//            // Đóng RestHighLevelClient khi đã sử dụng xong
-//            try {
-//                client.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 //        }
-//    }
+
+        String data = getData();
+
+        pushDataToELK(data);
+    }
+
+
+    public static void pushDataToELK(String data) {
+
+        try {
+
+            // Tạo một IndexRequest để đẩy chuỗi lên Elasticsearch
+            IndexRequest request = new IndexRequest("test")
+                    .source(data, XContentType.JSON);
+            // Thực hiện đẩy chuỗi lên Elasticsearch và nhận kết quả
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+
+            // In thông tin về kết quả
+            System.out.println("Document ID: " + response.getId());
+            System.out.println("Index: " + response.getIndex());
+            System.out.println("Result: " + response.getResult());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Đóng RestHighLevelClient khi đã sử dụng xong
+            try {
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public static  String getData() {
         StringBuilder content = new StringBuilder();
         try {
@@ -133,7 +133,7 @@ public class PushELK {
                     }
                 }
             }
-           
+
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
