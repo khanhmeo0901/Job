@@ -14,7 +14,7 @@ public class ReadDocx {
         try {
             String list = "";
             String keyword = "Knowledge";
-            String docxFilePath = "C:\\Users\\THINKPAD\\Desktop\\Công việc\\Data test\\BA Nguyễn Thị Hương .docx";
+            String docxFilePath = "C:\\Users\\ADMIN\\Desktop\\Công Việc\\Data test\\BA Nguyễn Thị Hương .docx";
 
             FileInputStream fis = new FileInputStream(new File(docxFilePath));
             long modifiedTimeMillis = new File(docxFilePath).lastModified();
@@ -43,7 +43,7 @@ public class ReadDocx {
                     }
                 }
             }
-//            System.out.println(list);
+            System.out.println(list);
 
             fis.close();
         } catch (IOException e) {

@@ -1,0 +1,150 @@
+[
+  {
+    "type": "text",
+    "content": "Curriculum Vitae"
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": "Experience Record:"
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": "Specialize:"
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": "Foreign Language:"
+  },
+  {
+    "type": "text",
+    "content": "English \u2013 Good"
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": "Proficiency:"
+  },
+  {
+    "type": "text",
+    "content": "Knowledge of SAP solutions and modules in sfields of FI-CO, FM, MM."
+  },
+  {
+    "type": "text",
+    "content": "Understanding of SAP system implementation methodology in particular and ERP system implementation methodology in general. "
+  },
+  {
+    "type": "text",
+    "content": "Having skills to do related documents: Blueprint, Functional Specification, User Mannual,.."
+  },
+  {
+    "type": "text",
+    "content": "Having basic understanding and experience in Business Process and configuration system, having analytical skill and logical mind. Be able to grasp the complex software system and learn quickly."
+  },
+  {
+    "type": "text",
+    "content": "Advanced using Microsoft Visio, Draw.io, Figma. "
+  },
+  {
+    "type": "text",
+    "content": "Proficient in using SQL, Power BI"
+  },
+  {
+    "type": "text",
+    "content": "General Accounting Certificate"
+  },
+  {
+    "type": "text",
+    "content": ""
+  },
+  {
+    "type": "text",
+    "content": "Epilogue: "
+  },
+  {
+    "type": "text",
+    "content": "I want to work in a dynamic environment with diverse projects and products; have a clear career path and comfortable fellowship. "
+  },
+  {
+    "type": "image",
+    "content": "image1.png"
+  },
+  {
+    "type": "table",
+    "content": [[
+      "",
+      "Full name: Nguyen Thi HuongPosition: SAP ConsultantDate of birth: 18/12/1998Address: No.53, 259 Alley, Yen Hoa, Cau Giay, Ha NoiEmail: huongnguyen.k55@ftu.edu.vnPhone No: 0964283046"
+    ]]
+  },
+  {
+    "type": "table",
+    "content": [
+      [
+        "Period",
+        "Company",
+        "Reference information",
+        "Job Title"
+      ],
+      [
+        "05/2021 \u2013 Present",
+        "NGS Consulting Joint Stock Company",
+        "Mrs. Pham Ngoc Tu - Director of Production Division NDU1Address: 4th floor, 6th Element, Nguyen Van Huyen Road, Tay Ho District, Ha Noi, VietnamPhone: (+84) 914 370 387Email: tupn@ngs.com.vn",
+        "SAP FICO Consultant"
+      ]
+    ]
+  },
+  {
+    "type": "table",
+    "content": [
+      ["EDUCATION AND CERTIFICATE"],
+      ["Foreign Trade University - 2020Bachelor \u2013 International Business"]
+    ]
+  },
+  {
+    "type": "table",
+    "content": [
+      ["EXPERIENCE IN PROJECT "],
+      [
+        "Start",
+        "Finish",
+        "Project Description"
+      ],
+      [
+        "05/2021",
+        "Present",
+        "Project: SAP ERP Support and Maintenance for NSRP RefineryAddress: 4th Floor, 6th Element, Nguyen Van Huyen, Tay Ho, HanoiPosition: SAP Functional ConsultantProject scope: Support SAP ERP System and implement BI reporting system, including:- FICO (Finance & Controlling)- FM (Fund Management)- BPC (Business Planning & Consolidation)- EPM (Enterprise Performance Management)- Power BI reportsResponsibility:Gather new requirements and carry out FIT/GAP analysis.Design solution for GAPs and complete Mockup, and making flowcharts.Carry out configuration and write Functional specifications for customized programs and reports.Error handling during SDT and support users to UATCreate User Guides and participate in training of System Administrators, end users.Daily support"
+      ],
+      [
+        "02/2023",
+        "07/2023",
+        "Project: PVNAddress: 18 Lang Ha, Dong Da, HanoiPosition: Implement SAP ERP system for PVNScope of the project: Build Management Accounting reports.Resposibility:Survey the business process of customers and receive requests from customersAnalyze FIT/GAP and build a set of solutions for analysis requirementsDevelop business specification documents for Management Accounting reports according to customer's available templatesSystem configuration, test case documentationPerform test on the systemDevelopment of user manuals and training materialsParticipate in system testing with usersError handling during UAT, project golive"
+      ]
+    ]
+  }
+]

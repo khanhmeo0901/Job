@@ -1,10 +1,7 @@
 package org.example;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.apache.http.HttpHost;
 import org.apache.poi.xwpf.usermodel.*;
-import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -15,10 +12,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PushELK {
     private static final RestHighLevelClient client = new RestHighLevelClient(
@@ -129,7 +123,8 @@ public class PushELK {
                             content.append(cellText+ "\t");
 
                         }
-                        System.out.println("\n"); // Xuống dòng sau mỗi hàng trong bảng
+                        content.append("\n");
+//                        System.out.println("\n"); // Xuống dòng sau mỗi hàng trong bảng
                     }
                 }
             }
