@@ -21,15 +21,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Test {
     private static final RestHighLevelClient client = new RestHighLevelClient(
             RestClient.builder(new HttpHost("localhost", 9200, "http")));
 
     public static void main(String[] args) {
 
-     //   readWordDocument();
-//          pushDataFromELK();
-         getDataFromELk();
+        readWordDocument();
+       //   pushDataFromELK();
+         getDataFromELk("Element");
     }
 
     public static void readWordDocument() {
@@ -70,10 +73,9 @@ public class Test {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public static void getDataFromELk() {
+    public static void getDataFromELk(String keyword) {
         try {
             SearchRequest request = new SearchRequest();
             request.indices("test");
@@ -88,17 +90,60 @@ public class Test {
                     Map<String, Object> map = hit.getSourceAsMap();
                     Object ob = map.get("key");
                     ArrayList<Object> arrayListValue = (ArrayList<Object>) ob;
-                    for (Object item : arrayListValue) {
-                        // Xử lý mỗi phần tử trong mảng
-                        System.out.println(item);
-                    }
+//                    for (Object item : arrayListValue) {
+//                        // Xử lý mỗi phần tử trong mảng
+////                        System.out.println(item);
+//                        String highlightedText = highlightKeywords(String.valueOf(item), keyword);
+//                        System.out.println(highlightedText);
+//                    }
 //                    System.out.println(map);
+                    // Biến đánh dấu khi tìm thấy keyword
+                    boolean foundKeyword = false;
+
+                    for (Object item : arrayListValue) {
+                        String itemText = String.valueOf(item);
+                        // Nếu tìm thấy keyword trong dòng văn bản
+                        if (itemText.contains(keyword)) {
+
+                            foundKeyword = true;
+                            // In dòng trước
+                            if (arrayListValue.indexOf(item) > 0) {
+                                String previousLine = String.valueOf(arrayListValue.get(arrayListValue.indexOf(item) - 1));
+                                System.out.println("Dòng trước: " + previousLine);
+                            }
+                            // Highlight keyword
+                            String highlightedText = highlightKeywords(itemText, keyword);
+                            System.out.println("Dòng chứa keyword được highlight: " + highlightedText);
+                            // In dòng chứa keyword
+//                            System.out.println("Dòng chứa keyword: " + itemText);
+                            // In dòng sau
+                            if (arrayListValue.indexOf(item) < arrayListValue.size() - 1) {
+                                String nextLine = String.valueOf(arrayListValue.get(arrayListValue.indexOf(item) + 1));
+                                System.out.println("Dòng sau: " + nextLine);
+                            }
+
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
             e.getMessage();
         }
 
+    }
+    public static String highlightKeywords(String text, String keyword) {
+        // Tạo biểu thức chính quy để tìm từ khóa
+        Pattern pattern = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(text);
+
+        // Đánh dấu từ khóa bằng thẻ <mark>
+        StringBuffer result = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(result, "<mark>" + matcher.group() + "</mark>");
+        }
+        matcher.appendTail(result);
+
+        return result.toString();
     }
 
     public static void pushDataFromELK() {
@@ -121,28 +166,45 @@ public class Test {
     public static List<String> getData() {
         try {
             List<String> list = new ArrayList<>();
-            String docxFilePath = "C:\\Users\\THINKPAD\\Desktop\\Công việc\\Data test\\BA Nguyễn Thị Hương .docx";
+            // Đường dẫn đến tệp DOCX chứa văn bản và bảng
+            String docxFilePath = "C:\\Users\\ADMIN\\Desktop\\Công Việc\\Data test\\BA Nguyễn Thị Hương .docx";
+            int count = 0 ;
+            // Mở tệp DOCX
             FileInputStream fis = new FileInputStream(new File(docxFilePath));
             XWPFDocument document = new XWPFDocument(fis);
+
+            // Duyệt qua từng phần trong tài liệu
             List<IBodyElement> elements = document.getBodyElements();
             for (IBodyElement element : elements) {
                 if (element instanceof XWPFParagraph) {
+                    // Xử lý dòng văn bản
                     XWPFParagraph paragraph = (XWPFParagraph) element;
                     String text = paragraph.getText();
-                    list.add(text);
+                    count ++;
+                    list.add("Line :"+count+" - Text : " + text );
+//                    System.out.println("Line :"+count+" - Text : " + text );
                 } else if (element instanceof XWPFTable) {
+                    // Xử lý bảng
                     XWPFTable table = (XWPFTable) element;
                     List<XWPFTableRow> rows = table.getRows();
                     for (XWPFTableRow row : rows) {
                         List<XWPFTableCell> cells = row.getTableCells();
                         for (XWPFTableCell cell : cells) {
-                            String cellText = cell.getText();
-                            list.add(cellText);
+                            for (XWPFParagraph cellParagraph : cell.getParagraphs()) {
+                                // Đọc nội dung của đoạn văn bản trong ô
+                                String cellParagraphText = cellParagraph.getText();
+                                count ++;
+//                                System.out.println("Line :"+count+" - Table :" + cellParagraphText);
+                                list.add("Line :"+count+" - Table :" + cellParagraphText);
+                            }
                         }
                     }
+                }else if (element instanceof XWPFPicture) {
+                    count ++;
+                    System.out.println("Line :"+count+" - Image:");
                 }
             }
-            System.out.println(list);
+            System.out.println(count);
             fis.close();
             return list;
         } catch (IOException e) {
@@ -150,4 +212,38 @@ public class Test {
         }
         return null;
     }
+//    public static List<String> getData() {
+//        try {
+//            List<String> list = new ArrayList<>();
+//            String docxFilePath = "C:\\Users\\THINKPAD\\Desktop\\Công việc\\Data test\\BA Nguyễn Thị Hương .docx";
+//            FileInputStream fis = new FileInputStream(new File(docxFilePath));
+//            XWPFDocument document = new XWPFDocument(fis);
+//            List<IBodyElement> elements = document.getBodyElements();
+//            for (IBodyElement element : elements) {
+//                if (element instanceof XWPFParagraph) {
+//                    XWPFParagraph paragraph = (XWPFParagraph) element;
+//                    String text = paragraph.getText();
+//                    list.add(text);
+//                } else if (element instanceof XWPFTable) {
+//                    XWPFTable table = (XWPFTable) element;
+//                    List<XWPFTableRow> rows = table.getRows();
+//                    for (XWPFTableRow row : rows) {
+//                        List<XWPFTableCell> cells = row.getTableCells();
+//                        for (XWPFTableCell cell : cells) {
+//                            String cellText = cell.getText();
+//                            list.add(cellText);
+//                        }
+//                    }
+//                }
+//            }
+//            System.out.println(list);
+//            fis.close();
+//            return list;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+
+
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.apache.http.HttpHost;
+import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.xwpf.usermodel.*;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -19,6 +20,16 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfOptions;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,21 +41,27 @@ public class TesTPush {
             RestClient.builder(new HttpHost("localhost", 9200, "http")));
 
     public static void main(String[] args) throws JsonProcessingException {
+
 //        String data = readFile();
 //        System.out.println(data);
 //        Map<String, String> data = readFile();
 //        String data = readFile();
-        String text = "abasdsdasdasds\nádsadsadasdasdsa\nádsadasdasdsa\nádasdsadasd";
-        Map<String, String> jsonMap = new HashMap<>();
-        jsonMap.put("value",text);
-
-        String jsonString = new Gson().toJson(jsonMap);
-
-        Map<String, String> kq = new HashMap<>();
-        kq.put("kq",jsonString);
-        pushData(jsonMap);
+//        getCountPage();
         //   getDataFromELK();
     }
+
+    public static void getCountPage() {
+        String docxFilePath = "C:\\Users\\ADMIN\\Desktop\\Công Việc\\Data test\\BA Nguyễn Thị Hương .docx";
+        try{
+            XWPFDocument docx = new XWPFDocument(POIXMLDocument.openPackage(docxFilePath));
+           int pageCount =   docx.getProperties().getExtendedProperties().getUnderlyingProperties().getPages();
+            System.out.println("Tổng số trang: " + pageCount);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static void getDataFromELK() {
         try {
