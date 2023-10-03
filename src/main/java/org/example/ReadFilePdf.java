@@ -107,7 +107,8 @@ public class ReadFilePdf {
 
     public static List<String> getDataTest() {
         try {
-            String pdfFilePath = "C:\\Users\\ADMIN\\Desktop\\Công Việc\\Data test\\BA Vũ Tùng Lâm.pdf";
+//            String pdfFilePath = "C:\\Users\\ADMIN\\Desktop\\Công Việc\\Data test\\BA Vũ Tùng Lâm.pdf";
+            String pdfFilePath =  "C:\\Users\\ADMIN\\Desktop\\Công Việc\\Data test\\BA Nguyễn Thị Hương.pdf";
             PDDocument document = PDDocument.load(new File(pdfFilePath));
 
             int countPage = document.getNumberOfPages();
@@ -127,9 +128,14 @@ public class ReadFilePdf {
                 BufferedReader reader = new BufferedReader(new StringReader(pdfContent));
                 String line;
                 int lineNumber = 1;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println("Page " + (i + 1) + ", Line " + lineNumber + ": " + line);
-                    lineNumber++;
+                while ((line = reader.readLine()) != null){
+                    if(!(line.contains("Evaluation Only. Created with Aspose.Words. Copyright 2003-2023 Aspose Pty Ltd."))
+                    && !(line.contains("Created with an evaluation copy of Aspose.Words. To discover the full versions of our APIs"))
+                            && !(line.contains("please visit: https://products.aspose.com/words/"))) {
+
+                        System.out.println("Page " + (i + 1) + ", Line " + lineNumber + ": " + line);
+                        lineNumber++;
+                    }
                 }
 
                 reader.close();
