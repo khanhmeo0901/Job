@@ -9,6 +9,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.example.Code.base.BaseAbstract;
 import org.example.Code.entity.KetQua;
+import org.example.Code.entity.ObjectKeyWord;
 import org.example.Code.service.ELKService;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +28,20 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
         this.client = client1;
     }
     @Override
-    public KetQua getDataFromELk(String keyword) {
+    public KetQua getDataFromELk(String keyword, int from, int size) {
         try {
             KetQua ketQua = new KetQua();
-            Map<String,List<String >> kq = new HashMap<>();
-            List<String> data = new ArrayList<>();
+            Map<String,List<ObjectKeyWord>> kq = new HashMap<>();
+            List<ObjectKeyWord> data = new ArrayList<>();
+
             SearchRequest request = new SearchRequest();
             request.indices("test");
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+            searchSourceBuilder.from((from-1)*size);
+            searchSourceBuilder.size(size);
             request.source(searchSourceBuilder);
+
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
             if (response.getHits().getTotalHits().value > 0) {
                 SearchHit[] searchHit = response.getHits().getHits();
@@ -45,27 +50,27 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
                     Object ob = map.get("value");
                     ArrayList<Object> arrayListValue = (ArrayList<Object>) ob;
                     for (Object item : arrayListValue) {
+                        ObjectKeyWord objectKeyWord = new ObjectKeyWord();
                         String itemText = String.valueOf(item);
                         if (itemText.contains(keyword)) {
                             if (arrayListValue.indexOf(item) > 0) {
                                 String previousLine = String.valueOf(arrayListValue.get(arrayListValue.indexOf(item) - 1));
-                                System.out.println("Dòng trước: " + previousLine);
-                                data.add(previousLine);
+                                objectKeyWord.setPreviousLine(previousLine);
                             }
                             String highlightedText = highlightKeywords(itemText, keyword);
-                            data.add(highlightedText);
-                            System.out.println("Dòng chứa keyword được highlight: " + highlightedText);
+                            objectKeyWord.setHighlightLine(highlightedText);
                             if (arrayListValue.indexOf(item) < arrayListValue.size() - 1) {
                                 String nextLine = String.valueOf(arrayListValue.get(arrayListValue.indexOf(item) + 1));
-                                System.out.println("Dòng sau: " + nextLine);
-                                data.add(nextLine);
+                                objectKeyWord.setNextLine(nextLine);
                             }
+                            data.add(objectKeyWord);
                         }
                     }
                 }
             }
+            ketQua.setTotal(String.valueOf(response.getHits().getTotalHits()));
             kq.put("data",data);
-            ketQua.setData(kq);
+            ketQua.setListData(kq);
             return ketQua;
         } catch (Exception e) {
             e.getMessage();

@@ -26,7 +26,7 @@ public abstract class BaseAbstract {
     public List<String> getDataFileDocx(File file) {
         try {
             List<String> list = new ArrayList<>();
-            int count = 0;
+           // int count = 0;
             FileInputStream fis = new FileInputStream(file);
             XWPFDocument document = new XWPFDocument(fis);
             List<IBodyElement> elements = document.getBodyElements();
@@ -34,8 +34,9 @@ public abstract class BaseAbstract {
                 if (element instanceof XWPFParagraph) {
                     XWPFParagraph paragraph = (XWPFParagraph) element;
                     String text = paragraph.getText();
-                    count++;
-                    list.add("Line :" + count + " - Text : " + text);
+                  //  count++;
+//                    list.add("Line :" + count + " - Text : " + text);
+                    list.add(text);
                 } else if (element instanceof XWPFTable) {
                     XWPFTable table = (XWPFTable) element;
                     List<XWPFTableRow> rows = table.getRows();
@@ -44,17 +45,19 @@ public abstract class BaseAbstract {
                         for (XWPFTableCell cell : cells) {
                             for (XWPFParagraph cellParagraph : cell.getParagraphs()) {
                                 String cellParagraphText = cellParagraph.getText();
-                                count++;
-                                list.add("Line :" + count + " - Table :" + cellParagraphText);
+//                                count++;
+//                                list.add("Line :" + count + " - Table :" + cellParagraphText);
+                                list.add(cellParagraphText);
                             }
                         }
                     }
                 } else if (element instanceof XWPFPicture) {
-                    count++;
-                    System.out.println("Line :" + count + " - Image:");
+                  //  count++;
+//                    System.out.println("Line :" + count + " - Image:");
+                   // System.out.println("Line :" + count + " - Image:");
                 }
             }
-            System.out.println(count);
+           // System.out.println(count);
             fis.close();
             return list;
         } catch (IOException e) {
@@ -64,15 +67,16 @@ public abstract class BaseAbstract {
     }
     public List<String> getDataFilePdf(File file) {
         try {
-            int count = 0;
+           // int count = 0;
             PDDocument document = PDDocument.load(file);
             PDFTextStripper textStripper = new PDFTextStripper();
             String pdfContent = textStripper.getText(document);
             String[] lines = pdfContent.split("\\r?\\n");
             List<String> listData = new ArrayList<>();
             for (int i = 0; i < lines.length; i++) {
-                count++;
-                listData.add("Line :" + count + " - Text : " + lines[i]);
+             //   count++;
+//                listData.add("Line :" + count + " - Text : " + lines[i]);
+                listData.add(lines[i]);
             }
             document.close();
             return listData;
