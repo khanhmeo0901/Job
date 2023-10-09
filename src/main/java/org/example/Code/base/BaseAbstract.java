@@ -12,10 +12,7 @@ import org.elasticsearch.xcontent.XContentType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class BaseAbstract {
     private RestHighLevelClient client;
@@ -88,9 +85,10 @@ public abstract class BaseAbstract {
     public  void pushDataFilePdfToELK(File file) {
         try {
             List<String> list = getDataFilePdf(file);
-            System.out.println(list);
+//            System.out.println(list);
             Map<String, List<String>> data = new HashMap<>();
             data.put("value", list);
+            data.put("fileName", Collections.singletonList(file.getName()));
             IndexRequest request = new IndexRequest("test")
                     .source(data, XContentType.JSON);
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
@@ -101,9 +99,10 @@ public abstract class BaseAbstract {
     public  void pushDataFileDocxToELK(File file) {
         try {
             List<String> list = getDataFileDocx(file);
-            System.out.println(list);
+//            System.out.println(list);
             Map<String, List<String>> data = new HashMap<>();
             data.put("value", list);
+            data.put("fileName", Collections.singletonList(file.getName()));
             IndexRequest request = new IndexRequest("test")
                     .source(data, XContentType.JSON);
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);

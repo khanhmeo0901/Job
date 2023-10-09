@@ -9,6 +9,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.example.Code.base.BaseAbstract;
 import org.example.Code.entity.KetQua;
+import org.example.Code.entity.ListObjectKeyWord;
 import org.example.Code.entity.ObjectKeyWord;
 import org.example.Code.service.ELKService;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,18 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
         super(client);
         this.client = client1;
     }
+
+
+    @Override
+    public void downloadFileFromELK(String fileName) {
+
+    }
+
     @Override
     public KetQua getDataFromELk(String keyword, int from, int size) {
         try {
             KetQua ketQua = new KetQua();
-            Map<String,List<ObjectKeyWord>> kq = new HashMap<>();
-            List<ObjectKeyWord> data = new ArrayList<>();
-
+            Map<String,List<ListObjectKeyWord>> kq = new HashMap<>();
             SearchRequest request = new SearchRequest();
             request.indices("test");
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -41,12 +47,14 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
             searchSourceBuilder.from((from-1)*size);
             searchSourceBuilder.size(size);
             request.source(searchSourceBuilder);
-
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
             if (response.getHits().getTotalHits().value > 0) {
+                List<ListObjectKeyWord> list = new ArrayList<>();
                 SearchHit[] searchHit = response.getHits().getHits();
                 for (SearchHit hit : searchHit) {
                     Map<String, Object> map = hit.getSourceAsMap();
+                    ListObjectKeyWord listObjectKeyWord = new ListObjectKeyWord();
+                    List<ObjectKeyWord> data = new ArrayList<>();
                     Object ob = map.get("value");
                     ArrayList<Object> arrayListValue = (ArrayList<Object>) ob;
                     for (Object item : arrayListValue) {
@@ -66,11 +74,14 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
                             data.add(objectKeyWord);
                         }
                     }
+                    listObjectKeyWord.setList(data);
+                    listObjectKeyWord.setId(hit.getId());
+                    list.add(listObjectKeyWord);
                 }
+                kq.put("data",list);
             }
-            ketQua.setTotal(String.valueOf(response.getHits().getTotalHits()));
-            kq.put("data",data);
             ketQua.setListData(kq);
+            ketQua.setTotal(String.valueOf(response.getHits().getTotalHits()));
             return ketQua;
         } catch (Exception e) {
             e.getMessage();

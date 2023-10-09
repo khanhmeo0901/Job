@@ -8,4 +8,6 @@ import java.util.Map;
 
 public interface ELKService {
     public KetQua getDataFromELk(String keyword, int from, int size);
+
+    public void downloadFileFromELK(String fileName);
 }

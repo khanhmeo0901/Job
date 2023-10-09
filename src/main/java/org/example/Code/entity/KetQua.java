@@ -4,24 +4,22 @@ import java.util.List;
 import java.util.Map;
 
 public class KetQua {
-    private String id;
-    private Map<String, List<ObjectKeyWord>> listData;
+    private Map<String, List<ListObjectKeyWord>> listData;
 
     private String total;
     public KetQua() {
     }
 
-    public KetQua(String id, Map<String, List<ObjectKeyWord>> data, String total) {
-        this.id = id;
+    public KetQua( Map<String, List<ListObjectKeyWord>> data, String total) {
         this.listData = data;
         this.total = total;
     }
 
-    public Map<String, List<ObjectKeyWord>> getListData() {
+    public Map<String, List<ListObjectKeyWord>> getListData() {
         return listData;
     }
 
-    public void setListData(Map<String, List<ObjectKeyWord>> listData) {
+    public void setListData(Map<String, List<ListObjectKeyWord>> listData) {
         this.listData = listData;
     }
 
@@ -33,11 +31,4 @@ public class KetQua {
         this.total = total;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }
