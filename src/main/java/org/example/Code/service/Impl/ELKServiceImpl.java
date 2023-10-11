@@ -4,6 +4,8 @@ import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -36,14 +38,27 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
     }
 
     @Override
-    public KetQua getDataFromELk(String keyword, int from, int size) {
+    public KetQua getDataFromELk(String keyword, int from, int size, List<String> listOption) {
         try {
+
             KetQua ketQua = new KetQua();
             Map<String,List<ListObjectKeyWord>> kq = new HashMap<>();
             SearchRequest request = new SearchRequest();
             request.indices("test");
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            searchSourceBuilder.query(QueryBuilders.matchAllQuery());
+            searchSourceBuilder.query(QueryBuilders.matchQuery("value",keyword));
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+            if(listOption.contains("NOT")) {
+                boolQueryBuilder.mustNot(QueryBuilders.matchQuery("value",keyword));
+            }
+            if(listOption.contains("AND")) {
+                boolQueryBuilder.must(QueryBuilders.matchQuery("value",keyword));
+            }
+            if(listOption.contains("OR")) {
+                boolQueryBuilder.should(QueryBuilders.matchQuery("value",keyword));
+            }
+
             searchSourceBuilder.from((from-1)*size);
             searchSourceBuilder.size(size);
             request.source(searchSourceBuilder);

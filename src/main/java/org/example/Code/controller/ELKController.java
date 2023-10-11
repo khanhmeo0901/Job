@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 public class ELKController {
@@ -28,8 +29,8 @@ public class ELKController {
 
     @GetMapping("/getData")
     public ProjectResponse<?> getDataFromELK(@RequestParam String keyword, @RequestParam(defaultValue = "1") int from
-            , @RequestParam(defaultValue = "10") int size) {
-        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size));
+            , @RequestParam(defaultValue = "10") int size, List<String> listOption) {
+        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size,listOption));
     }
 
     @GetMapping("/pushFile")
