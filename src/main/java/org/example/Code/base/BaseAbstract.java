@@ -70,26 +70,26 @@ public abstract class BaseAbstract {
         }
         return null;
     }
-    public  void pushDataFilePdfToELK(File file) {
+    public  void pushDataFilePdfToELK(File file, String index) {
         try {
             List<String> list = getDataFilePdf(file);
             Map<String, List<String>> data = new HashMap<>();
             data.put("value", list);
             data.put("fileName", Collections.singletonList(file.getName()));
-            IndexRequest request = new IndexRequest("test")
+            IndexRequest request = new IndexRequest(index)
                     .source(data, XContentType.JSON);
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public  void pushDataFileDocxToELK(File file) {
+    public  void pushDataFileDocxToELK(File file, String index) {
         try {
             List<String> list = getDataFileDocx(file);
             Map<String, List<String>> data = new HashMap<>();
             data.put("value", list);
             data.put("fileName", Collections.singletonList(file.getName()));
-            IndexRequest request = new IndexRequest("test")
+            IndexRequest request = new IndexRequest(index)
                     .source(data, XContentType.JSON);
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
         } catch (IOException e) {

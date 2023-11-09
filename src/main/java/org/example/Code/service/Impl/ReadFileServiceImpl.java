@@ -20,7 +20,7 @@ public class ReadFileServiceImpl extends BaseAbstract implements ReadFileService
         this.elkService = elkService;
     }
     @Override
-    public void filePath(String folderPath) {
+    public void filePath(String folderPath, String index) {
         File folder = new File(folderPath);
         if (folder.exists() && folder.isDirectory()) {
             File[] files = folder.listFiles();
@@ -31,21 +31,30 @@ public class ReadFileServiceImpl extends BaseAbstract implements ReadFileService
                         executorService.submit(() -> {
                             if (fileName.endsWith(".docx")) {
                                 getDataFileDocx(file);
-                                pushDataFileDocxToELK(file);
+                                pushDataFileDocxToELK(file,index);
                             } else if (fileName.endsWith(".pdf")) {
                                 getDataFilePdf(file);
-                                pushDataFilePdfToELK(file);
+                                pushDataFilePdfToELK(file,index);
                             }
+//                            else if(fileName.endsWith(".doc")) {
+//
+//                            }
                         });
                     }
                 }
                 executorService.shutdown();
                 executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+                System.out.println("Successfully !!!");
             } catch (Exception e) {
                 e.getMessage();
             }
         } else {
             System.err.println("Folder does not exist or is not a directory.");
         }
+    }
+
+    @Override
+    public void pushDataFromDB() {
+
     }
 }

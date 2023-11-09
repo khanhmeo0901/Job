@@ -16,8 +16,8 @@ public class ReadFileController extends BaseAbstract {
     }
 
     @PostMapping("/")
-    private void test(String file) {
-        readFileService.filePath(file);
+    private void test(String file,String index) {
+        readFileService.filePath(file,index);
     }
 
 

@@ -16,6 +16,7 @@ import org.example.Code.entity.ObjectKeyWord;
 import org.example.Code.service.ELKService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ELKServiceImpl extends BaseAbstract implements ELKService {
-    private RestHighLevelClient client;
+    private final RestHighLevelClient client;
     public ELKServiceImpl(RestHighLevelClient client, RestHighLevelClient client1) {
         super(client);
         this.client = client1;
@@ -38,7 +39,7 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
     }
 
     @Override
-    public KetQua getDataFromELk(String keyword, int from, int size, List<String> listOption) {
+    public KetQua getDataFromELk(String keyword, int from, int size, boolean and, boolean not, boolean or) {
         try {
 
             KetQua ketQua = new KetQua();
@@ -49,13 +50,13 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
             searchSourceBuilder.query(QueryBuilders.matchQuery("value",keyword));
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
-            if(listOption.contains("NOT")) {
+            if(and) {
                 boolQueryBuilder.mustNot(QueryBuilders.matchQuery("value",keyword));
             }
-            if(listOption.contains("AND")) {
+            if(not) {
                 boolQueryBuilder.must(QueryBuilders.matchQuery("value",keyword));
             }
-            if(listOption.contains("OR")) {
+            if(or) {
                 boolQueryBuilder.should(QueryBuilders.matchQuery("value",keyword));
             }
 
@@ -75,7 +76,7 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
                     for (Object item : arrayListValue) {
                         ObjectKeyWord objectKeyWord = new ObjectKeyWord();
                         String itemText = String.valueOf(item);
-                        if (itemText.contains(keyword)) {
+                        if (itemText.toLowerCase().contains(keyword.toLowerCase())) {
                             if (arrayListValue.indexOf(item) > 0) {
                                 String previousLine = String.valueOf(arrayListValue.get(arrayListValue.indexOf(item) - 1));
                                 objectKeyWord.setPreviousLine(previousLine);

@@ -1,5 +1,6 @@
 package org.example.Code.controller;
 
+import org.apache.http.Header;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -20,6 +21,10 @@ import org.example.Code.entity.ListObjectKeyWord;
 import org.example.Code.entity.ObjectKeyWord;
 import org.example.Code.service.ELKService;
 import org.example.Code.service.ReadFileService;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -43,15 +48,22 @@ public class ELKController {
         this.readFileService = readFileService;
     }
 
+//    @GetMapping("/getData")
+//    public ProjectResponse<?> getDataFromELK(@RequestParam String keyword, @RequestParam(defaultValue = "1") int from
+//            , @RequestParam(defaultValue = "10") int size, List<String> listOption) {
+//        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size,listOption));
+//    }
+
     @GetMapping("/getData")
     public ProjectResponse<?> getDataFromELK(@RequestParam String keyword, @RequestParam(defaultValue = "1") int from
-            , @RequestParam(defaultValue = "10") int size, List<String> listOption) {
-        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size,listOption));
+            , @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "false") boolean and,
+             @RequestParam(defaultValue = "false") boolean or,@RequestParam(defaultValue = "false") boolean not) {
+        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size, and, or, not));
     }
 
     @GetMapping("/pushFile")
-    public ProjectResponse<?> pushFileToELK(String folderPath) {
-        readFileService.filePath(folderPath);
+    public ProjectResponse<?> pushFileToELK(String folderPath, String index) {
+        readFileService.filePath(folderPath,index);
         return new ProjectResponse<>(ApiCode.SUCCESS);
     }
 
