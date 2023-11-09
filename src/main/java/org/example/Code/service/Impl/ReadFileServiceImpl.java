@@ -55,6 +55,6 @@ public class ReadFileServiceImpl extends BaseAbstract implements ReadFileService
 
     @Override
     public void pushDataFromDB() {
-
+        System.out.println("Hello");
     }
 }
