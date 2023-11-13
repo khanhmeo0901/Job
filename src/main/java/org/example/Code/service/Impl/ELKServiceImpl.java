@@ -1,5 +1,9 @@
 package org.example.Code.service.Impl;
 
+import com.google.gson.Gson;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -9,18 +13,18 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.xcontent.XContentType;
 import org.example.Code.base.BaseAbstract;
 import org.example.Code.entity.KetQua;
 import org.example.Code.entity.ListObjectKeyWord;
 import org.example.Code.entity.ObjectKeyWord;
+import org.example.Code.entity.Product;
 import org.example.Code.service.ELKService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +36,40 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
         this.client = client1;
     }
 
+    @Override
+    public void testELK(String folder) {
+        try{
+            Gson gson = new Gson();
+
+            List<Product> listProduct = Arrays.asList(
+                    new Product("1","khanh","HN"),
+                    new Product("2","khanh","Vp"),
+                    new Product("3","khanh","HT")
+            );
+
+            BulkRequest bulkRequest = new BulkRequest();
+            for (Product product : listProduct) {
+                IndexRequest indexRequest = new IndexRequest("test4")
+                        .id(product.getId())
+                        .source(gson.toJson(product), XContentType.JSON);
+
+                bulkRequest.add(indexRequest);
+            }
+
+            BulkResponse bulkResponse = client.bulk(bulkRequest, RequestOptions.DEFAULT);
+
+            // Process the response
+            if (bulkResponse.hasFailures()) {
+                // Handle failure cases
+                System.err.println("Bulk request failed: " + bulkResponse.buildFailureMessage());
+            } else {
+                // Handle successful cases
+                System.out.println("Bulk request successful");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void downloadFileFromELK(String fileName) {

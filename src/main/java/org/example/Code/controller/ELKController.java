@@ -54,6 +54,12 @@ public class ELKController {
 //        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size,listOption));
 //    }
 
+    @GetMapping("/test1311")
+    public ProjectResponse<?> testPush(String folder) {
+        elkService.testELK(folder);
+        return new ProjectResponse<>(ApiCode.SUCCESS);
+    }
+
     @GetMapping("/getData")
     public ProjectResponse<?> getDataFromELK(@RequestParam String keyword, @RequestParam(defaultValue = "1") int from
             , @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "false") boolean and,

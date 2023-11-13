@@ -11,4 +11,6 @@ public interface ELKService {
     public KetQua getDataFromELk(String keyword, int from, int size, boolean and, boolean not, boolean or);
 
     public void downloadFileFromELK(String fileName);
+
+    public void testELK(String folder);
 }
