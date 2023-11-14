@@ -45,7 +45,7 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
             KetQua ketQua = new KetQua();
             Map<String,List<ListObjectKeyWord>> kq = new HashMap<>();
             SearchRequest request = new SearchRequest();
-            request.indices("test");
+            request.indices("test5");
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.query(QueryBuilders.matchQuery("value",keyword));
             BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();

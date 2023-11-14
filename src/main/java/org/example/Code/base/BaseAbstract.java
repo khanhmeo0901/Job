@@ -2,6 +2,8 @@ package org.example.Code.base;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.xwpf.usermodel.*;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -20,6 +22,11 @@ public abstract class BaseAbstract {
     public BaseAbstract(RestHighLevelClient client) {
         this.client = client;
     }
+
+    public BaseAbstract() {
+
+    }
+
     public List<String> getDataFileDocx(File file) {
         try {
             List<String> list = new ArrayList<>();
@@ -70,6 +77,42 @@ public abstract class BaseAbstract {
         }
         return null;
     }
+
+//    public List<String> getDataFileDoc(File file) {
+//        try {
+//            List<String> list = new ArrayList<>();
+//            FileInputStream fis = new FileInputStream(file);
+//            HWPFDocument document = new HWPFDocument(fis);
+//
+//            WordExtractor we = new WordExtractor(document);
+//            List<IBodyElement> elements = we.getBodyElements();
+//            for (IBodyElement element : elements) {
+//                if (element instanceof XWPFParagraph) {
+//                    XWPFParagraph paragraph = (XWPFParagraph) element;
+//                    String text = paragraph.getText();
+//                    list.add(text);
+//                } else if (element instanceof XWPFTable) {
+//                    XWPFTable table = (XWPFTable) element;
+//                    List<XWPFTableRow> rows = table.getRows();
+//                    for (XWPFTableRow row : rows) {
+//                        List<XWPFTableCell> cells = row.getTableCells();
+//                        for (XWPFTableCell cell : cells) {
+//                            for (XWPFParagraph cellParagraph : cell.getParagraphs()) {
+//                                String cellParagraphText = cellParagraph.getText();
+//                                list.add(cellParagraphText);
+//                            }
+//                        }
+//                    }
+//                } else if (element instanceof XWPFPicture) {
+//                }
+//            }
+//            fis.close();
+//            return list;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
     public  void pushDataFilePdfToELK(File file, String index) {
         try {
             List<String> list = getDataFilePdf(file);

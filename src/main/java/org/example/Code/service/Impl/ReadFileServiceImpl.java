@@ -5,6 +5,7 @@ import org.example.Code.base.BaseAbstract;
 import org.example.Code.service.ELKService;
 import org.example.Code.service.ReadFileService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;
@@ -55,6 +56,11 @@ public class ReadFileServiceImpl extends BaseAbstract implements ReadFileService
 
     @Override
     public void pushDataFromDB() {
+
+    }
+
+    @Override
+    public void test(MultipartFile file, String index) {
 
     }
 }
