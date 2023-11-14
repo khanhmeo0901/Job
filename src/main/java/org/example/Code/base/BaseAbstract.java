@@ -20,6 +20,11 @@ public abstract class BaseAbstract {
     public BaseAbstract(RestHighLevelClient client) {
         this.client = client;
     }
+
+    public BaseAbstract() {
+
+    }
+
     public List<String> getDataFileDocx(File file) {
         try {
             List<String> list = new ArrayList<>();

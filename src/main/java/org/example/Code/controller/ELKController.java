@@ -1,6 +1,7 @@
 package org.example.Code.controller;
 
 import org.apache.http.Header;
+import org.apache.poi.xwpf.usermodel.*;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -14,6 +15,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.xcontent.XContentType;
+import org.example.Code.base.BaseAbstract;
 import org.example.Code.contanst.ApiCode;
 import org.example.Code.dto.ProjectResponse;
 import org.example.Code.entity.KetQua;
@@ -26,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -37,12 +40,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class ELKController {
+public class ELKController  {
     private RestHighLevelClient client;
     private ELKService elkService;
     private ReadFileService readFileService;
 
     public ELKController(RestHighLevelClient client, ELKService elkService, ReadFileService readFileService) {
+
         this.client = client;
         this.elkService = elkService;
         this.readFileService = readFileService;
@@ -54,6 +58,56 @@ public class ELKController {
 //        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size,listOption));
 //    }
 
+    public List<String> getDataFileDocx(File file) {
+        try {
+            List<String> list = new ArrayList<>();
+            FileInputStream fis = new FileInputStream(file);
+            XWPFDocument document = new XWPFDocument(fis);
+            List<IBodyElement> elements = document.getBodyElements();
+            for (IBodyElement element : elements) {
+                if (element instanceof XWPFParagraph) {
+                    XWPFParagraph paragraph = (XWPFParagraph) element;
+                    String text = paragraph.getText();
+                    list.add(text);
+                } else if (element instanceof XWPFTable) {
+                    XWPFTable table = (XWPFTable) element;
+                    List<XWPFTableRow> rows = table.getRows();
+                    for (XWPFTableRow row : rows) {
+                        List<XWPFTableCell> cells = row.getTableCells();
+                        for (XWPFTableCell cell : cells) {
+                            for (XWPFParagraph cellParagraph : cell.getParagraphs()) {
+                                String cellParagraphText = cellParagraph.getText();
+                                list.add(cellParagraphText);
+                            }
+                        }
+                    }
+                } else if (element instanceof XWPFPicture) {
+                }
+            }
+            fis.close();
+            return list;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @PostMapping("/importFile")
+    public ProjectResponse<?> testImport(@RequestBody MultipartFile multipartFile) throws IOException {
+            // Chuyển đổi MultipartFile sang File
+            File file = convertMultiPartToFile(multipartFile);
+
+            List<String> data = getDataFileDocx(file);
+            System.out.println(data);
+
+            return new ProjectResponse<>(ApiCode.SUCCESS);
+    }
+    private File convertMultiPartToFile(MultipartFile file) throws IOException {
+        File convertedFile = new File(file.getOriginalFilename());
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file.getBytes());
+        }
+        return convertedFile;
+    }
     @GetMapping("/test1311")
     public ProjectResponse<?> testPush(String folder) {
         elkService.testELK(folder);
