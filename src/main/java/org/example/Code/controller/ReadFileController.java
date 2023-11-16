@@ -3,6 +3,7 @@ package org.example.Code.controller;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.example.Code.base.BaseAbstract;
 import org.example.Code.service.ReadFileService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,9 @@ public class ReadFileController extends BaseAbstract {
     }
 
 
+    @PostMapping("/test1611")
+    public void test2(String index) {
+        pushData(index);
+    }
 
 }

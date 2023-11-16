@@ -1,13 +1,18 @@
 package org.example.Code.base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.*;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.xcontent.XContentType;
+import org.example.Code.entity.testES;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -94,6 +99,26 @@ public abstract class BaseAbstract {
             Map<String, List<String>> data = new HashMap<>();
             data.put("value", list);
             data.put("fileName", Collections.singletonList(file.getName()));
+            IndexRequest request = new IndexRequest(index)
+                    .source(data, XContentType.JSON);
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public  void pushData( String index) {
+        try {
+//            List<String> list = getDataFileDocx(file);
+//            System.out.println(list);
+            List<String> list = new ArrayList<>();
+            list.add("Hello");
+            list.add("world");
+            list.add("Khanh");
+            System.out.println(list);
+            Map<String, List<String>> data = new HashMap<>();
+
+            data.put("value", list);
+//            data.put("fileName", Collections.singletonList(file.getName()));
             IndexRequest request = new IndexRequest(index)
                     .source(data, XContentType.JSON);
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
