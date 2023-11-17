@@ -5,14 +5,16 @@ import java.util.Map;
 
 public class ListObjectKeyWord {
     private String id;
+    private String fileName;
     private List<ObjectKeyWord> list;
 
     public ListObjectKeyWord() {
     }
 
-    public ListObjectKeyWord(String id, List<ObjectKeyWord> list) {
+    public ListObjectKeyWord(String id, List<ObjectKeyWord> list, String fileName) {
         this.id = id;
         this.list = list;
+        this.fileName = fileName;
     }
 
     public String getId() {
@@ -29,5 +31,13 @@ public class ListObjectKeyWord {
 
     public void setList(List<ObjectKeyWord> list) {
         this.list = list;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

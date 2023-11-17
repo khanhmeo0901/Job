@@ -1,9 +1,11 @@
 package org.example.Code.base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
+import org.apache.poi.hwpf.usermodel.*;
 import org.apache.poi.xwpf.usermodel.*;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -14,6 +16,7 @@ import org.elasticsearch.xcontent.XContentType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public abstract class BaseAbstract {
@@ -78,6 +81,28 @@ public abstract class BaseAbstract {
         return null;
     }
 
+    public  List<String> readDocFile(File filePath) {
+        List<String> list = new ArrayList<>();
+
+        try (InputStream fis = new FileInputStream(filePath)) {
+            HWPFDocument document = new HWPFDocument(fis);
+
+            // Get the range of the document
+            Range range = document.getRange();
+
+            // Iterate through paragraphs
+            for (int i = 0; i < range.numParagraphs(); i++) {
+                Paragraph paragraph = range.getParagraph(i);
+                String text = paragraph.text();
+                list.add(text);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(list);
+        return list;
+    }
+
 //    public List<String> getDataFileDoc(File file) {
 //        try {
 //            List<String> list = new ArrayList<>();
@@ -137,6 +162,54 @@ public abstract class BaseAbstract {
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void pushDataFileDocxToELK1(File file, String index) {
+        try {
+            List<String> list = getDataFileDocx(file);
+            Map<String, List<String>> data = new HashMap<>();
+            data.put("value", Collections.singletonList(convertListToString(list)));
+            data.put("fileName", Collections.singletonList(file.getName()));
+            IndexRequest request = new IndexRequest(index)
+                    .source(data, XContentType.JSON);
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void pushDataFileDocxToELK2(File file, String index) {
+        try {
+            List<String> list = getDataFileDocx(file);
+            Map<String, List<String>> data = new HashMap<>();
+
+            String convert = convertListToString(list);
+            List<String> kq = convertStringToList(convert);
+            data.put("value", kq);
+            data.put("fileName", Collections.singletonList(file.getName()));
+            IndexRequest request = new IndexRequest(index)
+                    .source(data, XContentType.JSON);
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private String convertListToString(List<String> list) {
+        try {
+            return new ObjectMapper().writeValueAsString(list);
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    private List<String> convertStringToList(String str) {
+        try {
+            return new ObjectMapper().readValue(str, List.class);
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
     }
 }

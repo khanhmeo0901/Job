@@ -72,6 +72,8 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
                     ListObjectKeyWord listObjectKeyWord = new ListObjectKeyWord();
                     List<ObjectKeyWord> data = new ArrayList<>();
                     Object ob = map.get("value");
+                    Object fileName = map.get("fileName");
+
                     ArrayList<Object> arrayListValue = (ArrayList<Object>) ob;
                     for (Object item : arrayListValue) {
                         ObjectKeyWord objectKeyWord = new ObjectKeyWord();
@@ -92,7 +94,9 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
                     }
                     listObjectKeyWord.setList(data);
                     listObjectKeyWord.setId(hit.getId());
+                    listObjectKeyWord.setFileName(fileName.toString());
                     list.add(listObjectKeyWord);
+
                 }
                 kq.put("data",list);
             }

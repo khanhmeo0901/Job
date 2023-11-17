@@ -122,7 +122,42 @@ public class ELKController {
 
         return new ProjectResponse<>(ApiCode.SUCCESS);
     }
+    // Dùng cách này trong code
+    @PostMapping("/importFile2")
+    public ProjectResponse<?> testImportFile2(@RequestBody MultipartFile multipartFile, String index) throws IOException {
 
+        // Chuyển đổi MultipartFile sang File
+        File file = convertMultiPartToFile(multipartFile);
+
+        try {
+            List<String> list = getDataFileDocx(file);
+            Map<String, List<String>> data = new HashMap<>();
+            String kq = new ObjectMapper().writeValueAsString(list);
+            List<String> list1 = convertStringToList(kq);
+            System.out.println("==============================");
+            System.out.println(list1);
+            data.put("value", list1);
+            data.put("fileName", Collections.singletonList(file.getName()));
+            IndexRequest request = new IndexRequest(index)
+                    .source(data, XContentType.JSON);
+            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+            System.out.println("Push data to ELk Successful !");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ProjectResponse<>(ApiCode.SUCCESS);
+    }
+
+
+    private List<String> convertStringToList(String str) {
+        try {
+            return new ObjectMapper().readValue(str, List.class);
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
     @GetMapping("/getData")
     public ProjectResponse<?> getDataFromELK(@RequestParam String keyword, @RequestParam(defaultValue = "1") int from
             , @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "false") boolean and,
