@@ -14,11 +14,12 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.PutMappingRequest;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.xcontent.XContentType;
+//import org.elasticsearch.xcontent.XContentType;
 import org.example.Code.base.BaseAbstract;
 import org.example.Code.contanst.ApiCode;
 import org.example.Code.dto.ProjectResponse;
@@ -59,11 +60,11 @@ public class ELKController {
 //            , @RequestParam(defaultValue = "10") int size, List<String> listOption) {
 //        return new ProjectResponse<>(ApiCode.SUCCESS, elkService.getDataFromELk(keyword, from, size,listOption));
 //    }
-    private File convertMultiPartToFile(MultipartFile multipartFile) throws IOException {
-        File file = new File(multipartFile.getOriginalFilename());
-        FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
-        return file;
-    }
+//    private File convertMultiPartToFile(MultipartFile multipartFile) throws IOException {
+//        File file = new File(multipartFile.getOriginalFilename());
+//        FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), file);
+//        return file;
+//    }
     public List<String> getDataFileDocx(File file) {
         try {
             List<String> list = new ArrayList<>();
@@ -98,56 +99,56 @@ public class ELKController {
         return null;
     }
 
-    @PostMapping("/importFile")
-    public ProjectResponse<?> testImportFile(@RequestBody MultipartFile multipartFile, String index) throws IOException {
-
-        // Chuyển đổi MultipartFile sang File
-        File file = convertMultiPartToFile(multipartFile);
-
-        try {
-            List<String> list = getDataFileDocx(file);
-            Map<String, List<String>> data = new HashMap<>();
-            String kq = new ObjectMapper().writeValueAsString(list);
-            System.out.println("==============================");
-            System.out.println(kq);
-            data.put("value", Collections.singletonList(kq));
-            data.put("fileName", Collections.singletonList(file.getName()));
-            IndexRequest request = new IndexRequest(index)
-                    .source(data, XContentType.JSON);
-            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
-            System.out.println("Push data to ELk Successful !");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new ProjectResponse<>(ApiCode.SUCCESS);
-    }
-    // Dùng cách này trong code
-    @PostMapping("/importFile2")
-    public ProjectResponse<?> testImportFile2(@RequestBody MultipartFile multipartFile, String index) throws IOException {
-
-        // Chuyển đổi MultipartFile sang File
-        File file = convertMultiPartToFile(multipartFile);
-
-        try {
-            List<String> list = getDataFileDocx(file);
-            Map<String, List<String>> data = new HashMap<>();
-            String kq = new ObjectMapper().writeValueAsString(list);
-            List<String> list1 = convertStringToList(kq);
-            System.out.println("==============================");
-            System.out.println(list1);
-            data.put("value", list1);
-            data.put("fileName", Collections.singletonList(file.getName()));
-            IndexRequest request = new IndexRequest(index)
-                    .source(data, XContentType.JSON);
-            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
-            System.out.println("Push data to ELk Successful !");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new ProjectResponse<>(ApiCode.SUCCESS);
-    }
+//    @PostMapping("/importFile")
+//    public ProjectResponse<?> testImportFile(@RequestBody MultipartFile multipartFile, String index) throws IOException {
+//
+//        // Chuyển đổi MultipartFile sang File
+//        File file = convertMultiPartToFile(multipartFile);
+//
+//        try {
+//            List<String> list = getDataFileDocx(file);
+//            Map<String, List<String>> data = new HashMap<>();
+//            String kq = new ObjectMapper().writeValueAsString(list);
+//            System.out.println("==============================");
+//            System.out.println(kq);
+//            data.put("value", Collections.singletonList(kq));
+//            data.put("fileName", Collections.singletonList(file.getName()));
+//            IndexRequest request = new IndexRequest(index)
+//                    .source(data, XContentType.JSON);
+//            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+//            System.out.println("Push data to ELk Successful !");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return new ProjectResponse<>(ApiCode.SUCCESS);
+//    }
+//    // Dùng cách này trong code
+//    @PostMapping("/importFile2")
+//    public ProjectResponse<?> testImportFile2(@RequestBody MultipartFile multipartFile, String index) throws IOException {
+//
+//        // Chuyển đổi MultipartFile sang File
+//        File file = convertMultiPartToFile(multipartFile);
+//
+//        try {
+//            List<String> list = getDataFileDocx(file);
+//            Map<String, List<String>> data = new HashMap<>();
+//            String kq = new ObjectMapper().writeValueAsString(list);
+//            List<String> list1 = convertStringToList(kq);
+//            System.out.println("==============================");
+//            System.out.println(list1);
+//            data.put("value", list1);
+//            data.put("fileName", Collections.singletonList(file.getName()));
+//            IndexRequest request = new IndexRequest(index)
+//                    .source(data, XContentType.JSON);
+//            IndexResponse response = client.index(request, RequestOptions.DEFAULT);
+//            System.out.println("Push data to ELk Successful !");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return new ProjectResponse<>(ApiCode.SUCCESS);
+//    }
 
 
     private List<String> convertStringToList(String str) {
@@ -220,7 +221,7 @@ public class ELKController {
             searchSourceBuilder.query(QueryBuilders.matchAllQuery());
             request.source(searchSourceBuilder);
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
-            if (response.getHits().getTotalHits().value > 0) {
+            if (response.getHits().getTotalHits() > 0) {
                 SearchHit[] searchHit = response.getHits().getHits();
                 for (SearchHit hit : searchHit) {
                     Map<String, Object> map = hit.getSourceAsMap();

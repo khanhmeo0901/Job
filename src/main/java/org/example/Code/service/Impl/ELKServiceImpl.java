@@ -64,7 +64,7 @@ public class ELKServiceImpl extends BaseAbstract implements ELKService {
             searchSourceBuilder.size(size);
             request.source(searchSourceBuilder);
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
-            if (response.getHits().getTotalHits().value > 0) {
+            if (response.getHits().getTotalHits() > 0) {
                 List<ListObjectKeyWord> list = new ArrayList<>();
                 SearchHit[] searchHit = response.getHits().getHits();
                 for (SearchHit hit : searchHit) {
