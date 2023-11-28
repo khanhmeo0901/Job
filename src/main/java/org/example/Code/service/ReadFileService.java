@@ -10,4 +10,6 @@ public interface ReadFileService {
 
     public void pushDataFromDB();
     public void test(MultipartFile file, String index);
+
+    public void syncPushFile(String folderPath);
 }
